@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+   
+    </head>
+    <body>
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body s_modal-body">
+                        <ul class="list-group">
+                            <li class="list-group-item">id</li>
+                            <li class="list-group-item">title</li>
+                            <li class="list-group-item">firstName</li>
+                            <li class="list-group-item">pageCount</li>
+                            
+                        </ul>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+                </div>
+            </div>
+
+
+
+                
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.24.0/axios.min.js" integrity="sha512-u9akINsQsAkG9xjc1cnGF4zw5TFDwkxuc9vUp5dltDWYCSmyd0meygbvgXrlc/z7/o4a19Fb5V0OUE58J7dcyw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script>
+             
+            //function definaation
+           
+                //lets create a promise obect
+                 promiseObject = new Promise(function(resolve,reject){
+
+                    axios.get('https://fakerestapi.azurewebsites.net/api/v1/Books').then(function(response){
+                        console.log(  response );
+                   
+                        if(response.status==200){
+                            resolve(response.data);
+                        }else{
+                            reject('error');
+                        }
+                       
+                });
+               
+            
+        });
+                promiseObject.then(function(data){
+                    console.log(data);
+
+                var tr = `<table class="table">
+                                                            <thead>
+                                                            <tr>
+                                                                <th scope="col">id</th>
+                                                                <th scope="col">title</th>
+                                                                <th scope="col">description</th>
+                                                                <th scope="col">pageCount</th>
+                                                                
+                                                                <th scope="col">action</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>`;
+                                                    
+                                                            
+                data.forEach(currentElement => {
+                        console.log(currentElement)
+
+                        tr+=`<tr>
+                                    
+                                    <td>`+currentElement.id+`</td>
+                                    <td>`+currentElement.title+`</td>
+                                    <td>`+currentElement.description+`</td>
+                                    <td>`+currentElement.pageCount+`</td>
+                                    
+                                    <td> 
+                                        <button class="btn btn-sm btn-success s_viewbtn" data-bs-toggle="modal" data-bs-target="#exampleModal">View</button>
+                                        <button  class="btn btn-sm btn-warning">delete</button>
+                                        <button  class="btn btn-sm btn-primary">edit</button>
+                                        </td>
+                            </tr>`
+                        });
+                
+                        tr = tr + ` </tbody>
+                                            </table>`;
+                            console.log(tr);
+                            document.body.innerHTML= document.body.innerHTML + tr;
+
+                }).catch(function(){
+
+                });
+                document.querySelector('table>tbody').innerHTML= tr;
+                document.addEventListener('click',function(e){
+                    console.log(e);
+                    if(e.target.classList.contains('s_viewbtn')){
+                       // console.log('yes');
+
+                        let id = e.target.closest('tr').querySelector('td:first-child').innerHTML;
+                        let title = e.target.closest('tr').querySelector('td:nth-child(2)').innerHTML;
+                        let description = e.target.closest('tr').querySelector('td:nth-child(3)').innerHTML;
+                        let pageCount= e.target.closest('tr').querySelector('td:nth-child(4)').innerHTML;
+
+
+                        var lg = document.querySelector(' .s_modal-body> .list-group');
+                            lg.querySelector('li:first-child').innerHTML = id;
+                            lg.querySelector('li:nth-child(2)').innerHTML = title;
+                            lg.querySelector('li:nth-child(3)').innerHTML = description;
+                            lg.querySelector('li:nth-child(4)').innerHTML = pageCount;
+                    }
+                })
+            
+        </script>
+        
+    
+  
+        
+</body>
+</html>
